@@ -280,7 +280,7 @@
         document.querySelector('.end-ride-button').addEventListener('click', () => {
             clearInterval(tripInterval);
             alert('Course terminée!');
-            // Ici vous pouvez ajouter la redirection vers la page de paiement ou d'évaluation
+            window.location.href = './history.html';
         });
     </script>
 </body>

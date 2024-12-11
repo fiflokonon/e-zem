@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Zem - Appel</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #E5A853;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #2c3e50, #3498db);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            color: white;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .caller-info {
+            margin-top: 100px;
+            text-align: center;
+            color: white;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 3px solid white;
+        }
+
+        .caller-name {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .call-status {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .call-timer {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .call-controls {
+            position: fixed;
+            bottom: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .call-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .call-button:active {
+            transform: scale(0.95);
+        }
+
+        .end-call {
+            background-color: #e74c3c;
+        }
+
+        .mute {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .speaker {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .active {
+            background-color: white;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="back-button" onclick="window.history.back()">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    </div>
+
+    <div class="caller-info">
+        <img src="./assets/img/user.png" alt="William Edward" class="avatar">
+        <div class="caller-name">William Edward</div>
+        <div class="call-status">Appel en cours...</div>
+        <div class="call-timer" id="timer">00:00</div>
+    </div>
+
+    <div class="call-controls">
+        <button class="call-button mute" id="muteButton">
+            <i class="fas fa-microphone-slash"></i>
+        </button>
+        <button class="call-button end-call">
+            <i class="fas fa-phone-slash"></i>
+        </button>
+        <button class="call-button speaker" id="speakerButton">
+            <i class="fas fa-volume-up"></i>
+        </button>
+    </div>
+
+    <script>
+        // Timer
+        let seconds = 0;
+        let minutes = 0;
+        let timerStarted = false;
+
+        function startTimer() {
+            if (!timerStarted) {
+                timerStarted = true;
+                setTimeout(() => {
+                    document.querySelector('.call-status').textContent = 'En appel';
+                    setInterval(updateTimer, 1000);
+                }, 2000);
+            }
+        }
+
+        function updateTimer() {
+            seconds++;
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+            }
+            const formattedTime = ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')};
+            document.getElementById('timer').textContent = formattedTime;
+        }
+
+        // Boutons de contrôle
+        const muteButton = document.getElementById('muteButton');
+        const speakerButton = document.getElementById('speakerButton');
+
+        muteButton.addEventListener('click', () => {
+            muteButton.classList.toggle('active');
+        });
+
+        speakerButton.addEventListener('click', () => {
+            speakerButton.classList.toggle('active');
+        });
+
+        // Bouton de fin d'appel
+        document.querySelector('.end-call').addEventListener('click', () => {
+            window.history.back();
+        });
+
+        // Démarrer le timer automatiquement
+        startTimer();
+    </script>
+</body>
+</html>
