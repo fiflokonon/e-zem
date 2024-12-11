@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>e-Zem</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <script src="./js-sdk.min.js"></script>
+    <script src="./vconsole.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <!-- Inclure le lien Google Fonts pour Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+        <!-- Inclure Bootstrap CSS -->
+
+    <link rel="stylesheet" href="./micro.css">
     <style>
         :root {
             --primary-color: #E5A853;
@@ -34,7 +42,7 @@
         }
 
         .splash-logo {
-            width: 120px;
+            width: 75%;
             height: 120px;
             margin-bottom: 20px;
             animation: pulse 2s infinite;
@@ -147,9 +155,9 @@
 <body>
     <!-- Splashscreen -->
     <div class="splash-screen" id="splashScreen">
-        <img src="/api/placeholder/120/120" alt="e-Zem Logo" class="splash-logo">
+        <img src="./assets/img/logo-full-black.png" alt="e-Zem Logo" class="splash-logo">
         <h1 class="splash-title">Bienvenue sur e-Zem</h1>
-        <p class="splash-text">Profitez de notre service e-Zevi pour transporter vos enfants en toute sécurité</p>
+        <p class="splash-text"> Votre Conducteur en un clic,  </p>
     </div>
 
     <!-- Page de choix -->
@@ -157,13 +165,13 @@
         <h2 class="choice-title">Je suis un...</h2>
         <div class="choice-buttons">
             <button class="choice-button client-button">
-                <a href="./home.html">
+                <a href="./home.html" class="text-light" style="text-decoration: none; color: white;">
                     <i class="fas fa-user"></i>
                 Client
                 </a>
                 
             </button>
-            <button class="choice-button driver-button">
+            <button onclick="alert('Indisponible')" class="choice-button driver-button-">
                 <i class="fas fa-motorcycle"></i>
                 Zémidjan
             </button>
