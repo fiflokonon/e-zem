@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Zem Mobile</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <script src="./js-sdk.min.js"></script>
+    <script src="./vconsole.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #E5A853;
+            --text-color: #333;
+            --gray-light: #f5f5f5;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-color);
+            background-color: #fff;
+        }
+        .modal-container {
+            display: none;
+        }
+
+        .modal-container.active {
+            display: block;
+        }
+        .header {
+            padding: 20px;
+        }
+
+        .notification-bell {
+            float: right;
+            color: #333;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background-color: #FFA500;
+            border-radius: 50%;
+        }
+
+        .hero-card {
+            background-color: var(--primary-color);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px;
+            color: white;
+            min-height: 150px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card img {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            max-height: 100%;
+            opacity: 0.8;
+        }
+
+        .services-section {
+            padding: 20px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 10px 0;
+        }
+
+        .service-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px 15px;
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-icon-container {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            background-color: var(--gray-light);
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .service-icon {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .service-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin: 0 0 6px 0;
+            text-align: center;
+        }
+
+        .service-description {
+            font-size: 0.75rem;
+            color: #636e72;
+            margin-bottom: 12px;
+            text-align: center;
+            line-height: 1.2;
+            min-height: 2.4em;
+        }
+
+        .service-status {
+            display: inline-block;
+            background-color: var(--gray-medium);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #2d3436;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Ajustements pour le conteneur principal des services */
+        .services-section {
+            padding: 20px;
+            background-color: var(--gray-light);
+        }
+
+        .services-section h3 {
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: #2d3436;
+        }
+
+        /* Style pour le statut "Disponible" */
+        .service-status.available {
+            background-color: #def0d8;
+            color: #2d5a27;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .slider-dots {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin: 0 4px;
+        }
+
+        .dot.active {
+            background-color: var(--primary-color);
+            width: 20px;
+            border-radius: 4px;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 998;
+        }
+        
+        .service-modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+            z-index: 999;
+        }
+        
+        .modal-content {
+            padding: 20px;
+        }
+        
+        .location-container {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .location-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 12px;
+        }
+        
+        .location-icon {
+            width: 24px;
+            text-align: center;
+        }
+        
+        .location-info {
+            flex: 1;
+        }
+        
+        .location-label {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+        
+        .location-value {
+            font-weight: 500;
+        }
+        
+        .voice-command {
+            background: #eee;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        
+        .price-container {
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .price-label {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+        
+        .price-value {
+            font-weight: 600;
+        }
+        
+        .order-button {
+            background: #000;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .show-modal {
+            transform: translateY(0);
+        }
+        
+        .show-overlay {
+            display: block;
+        }
+
+        .location-input {
+            background: var(--gray-light);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .location-point {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .location-icon {
+            color: var(--primary-color);
+            margin-top: 5px;
+        }
+
+        .location-details {
+            flex: 1;
+        }
+
+        .location-label {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .location-value {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .voice-command {
+            background: var(--gray-light);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #333;
+            margin: 15px 0;
+            cursor: pointer;
+        }
+
+        .price-section {
+            background: var(--gray-light);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .price-label {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .price-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .action-button {
+            background: #000;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            width: 100%;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+
+        .action-button:hover {
+            background: #222;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Helloo...</h2>
+        <a href="#" class="notification-bell">
+            <i class="far fa-bell"></i>
+            <span class="notification-dot"></span>
+        </a>
+    </div>
+
+    <div class="hero-card">
+        <h3>e-Zem</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur elit, sed do eiusd</p>
+    </div>
+
+    <div class="slider-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+
+    <div class="services-section">
+        <h3>Services</h3>
+        <div class="services-grid">
+            <a href="#" class="service-card">
+                <div class="service-icon-container">
+                    <img src="./assets/img/motorcycle.png" alt="Zémidjan" class="service-icon">
+                </div>
+                <div class="service-title">Zémidjan</div>
+                <div class="service-description">Colis/covoiturage</div>
+                <div class="service-status available">Disponible</div>
+            </a>
+
+            <a href="#" class="service-card">
+                <div class="service-icon-container">
+                    <img src="./assets/img/clock 1.png" alt="Réservation" class="service-icon">
+                </div>
+                <div class="service-title">Réservation</div>
+                <div class="service-description">École, boulot, Évènement...</div>
+                <div class="service-status available">Disponible</div>
+            </a>
+
+            <a href="#" class="service-card">
+                <div class="service-icon-container">
+                    <img src="./assets/img/children 1.png" alt="e-Zévi" class="service-icon">
+                </div>
+                <div class="service-title">e-Zévi</div>
+                <div class="service-description">Colis/covoiturage</div>
+                <div class="service-status available">Disponible</div>
+            </a>
+
+            <a href="#" class="service-card">
+                <div class="service-icon-container">
+                    <img src="./assets/img/motorcycle-1.png" alt="Livraison" class="service-icon">
+                </div>
+                <div class="service-title">Livraison</div>
+                <div class="service-description">École, boulot, Évènement...</div>
+                <div class="service-status available">Disponible</div>
+            </a>
+
+            <a href="#" class="service-card">
+                <div class="service-icon-container">
+                    <img src="./assets/img/destination (1).png" alt="Tourisme" class="service-icon">
+                </div>
+                <div class="service-title">Tourisme</div>
+                <div class="service-description">Colis/covoiturage</div>
+                <div class="service-status available">Disponible</div>
+            </a>
+
+            <a href="#" class="service-card">
+                <div class="service-icon-container">
+                    <img src="./assets/img/fast-time.png" alt="Course rapide" class="service-icon">
+                </div>
+                <div class="service-title">Course rapide</div>
+                <div class="service-description">École, boulot, Évènement...</div>
+                <div class="service-status available">Disponible</div>
+            </a>
+        </div>
+    </div>
+
+    <div class="modal-overlay"></div>
+    <div class="service-modal">
+        <div class="modal-content">
+            <div class="location-container">
+                <div class="location-item">
+                    <div class="location-icon">
+                        <i class="fas fa-circle" style="color: #E5A853;"></i>
+                    </div>
+                    <div class="location-info">
+                        <div class="location-label">Point de départ</div>
+                        <div class="location-value">Cotonou, Fidjrossé</div>
+                    </div>
+                </div>
+                
+                <div class="location-item">
+                    <div class="location-icon">
+                        <i class="fas fa-map-marker-alt" style="color: #E5A853;"></i>
+                    </div>
+                    <div class="location-info">
+                        <div class="location-label">Point d'arriver</div>
+                        <div class="location-value">Cotonou, Fifadji</div>
+                    </div>
+                </div>
+                
+                <div class="voice-command">
+                    <i class="fas fa-microphone"></i>
+                    <span>Commande vocale</span>
+                </div>
+            </div>
+
+            <div class="price-container">
+                <div class="price-label">Votre prix</div>
+                <div class="price-value">500F CFA - 700F CFA</div>
+            </div>
+
+            <button class="order-button">Lancer la commande</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item">
+            <i class="fas fa-home"></i>
+            Accueil
+        </a>
+        <a href="#" class="nav-item">
+            <i class="fas fa-motorcycle"></i>
+            Trajets
+        </a>
+        <a href="./history.html" class="nav-item">
+            <i class="far fa-clock"></i>
+            Historique
+        </a>
+        <a href="./chat.html" class="nav-item">
+            <i class="far fa-comment-alt"></i>
+            Messages
+        </a>
+        <a href="./profile.html" class="nav-item">
+            <i class="far fa-user"></i>
+            Profil
+        </a>
+    </nav>
+
+    <div class="modal-container">
+        <div class="location-input">
+            <div class="location-point">
+                <div class="location-icon">
+                    <i class="fas fa-circle" style="font-size: 12px;"></i>
+                </div>
+                <div class="location-details">
+                    <div class="location-label">Point de départ</div>
+                    <div class="location-value">Cotonou, Fidjrossé</div>
+                </div>
+            </div>
+            
+            <div class="location-point">
+                <div class="location-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="location-details">
+                    <div class="location-label">Point d'arriver</div>
+                    <div class="location-value">Cotonou, Fifadji</div>
+                </div>
+            </div>
+
+            <div class="voice-command">
+                <i class="fas fa-microphone"></i>
+                <span>Commande vocale</span>
+            </div>
+        </div>
+
+        <div class="price-section">
+            <div class="price-label">Votre prix</div>
+            <div class="price-value">500F CFA - 700F CFA</div>
+        </div>
+
+        <button class="action-button">Lancer la commande</button>
+    </div>
+
+    <script>
+        // Initialize VConsole
+        var vConsole = new VConsole();
+        window.onload = function() {
+            getMiniServerToken();
+            login();
+        };
+
+        function getMiniServerToken() {
+            $.ajax({
+                url: "https://pub-za.appcubecloud.com/baas/auth/v1.0/oauth2/token",
+                method: "POST",
+                async: true,
+                data: {
+                    client_id: "72e0cca5a798c1ac32f4941046753ed7",
+                    client_secret: "f1c69a1ffa5427d6728019566543ffd4fc537b1e2042bd3d",
+                    grant_type: "client_credentials"
+                },
+                success: function (response) {
+                    console.log("miniservertoken:", response.access_token);
+                    window.miniservertoken = response.access_token;
+                },
+                error: function (xhr, status, error) {
+                    console.log("miniservertoken create fail", error);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceCards = document.querySelectorAll('.service-card');
+            const modal = document.querySelector('.service-modal');
+            const overlay = document.querySelector('.modal-overlay');
+        
+            serviceCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    modal.classList.add('show-modal');
+                    overlay.classList.add('show-overlay');
+                });
+            });
+        
+            overlay.addEventListener('click', function() {
+                modal.classList.remove('show-modal');
+                overlay.classList.remove('show-overlay');
+            });
+        
+            // Fermeture par glissement
+            let touchStart = 0;
+            let touchEnd = 0;
+        
+            modal.addEventListener('touchstart', function(e) {
+                touchStart = e.touches[0].clientY;
+            });
+        
+            modal.addEventListener('touchmove', function(e) {
+                touchEnd = e.touches[0].clientY;
+                if (touchEnd > touchStart) { // Glissement vers le bas
+                    const diff = touchEnd - touchStart;
+                    modal.style.transform = `translateY(${diff}px)`;
+                }
+            });
+        
+            modal.addEventListener('touchend', function() {
+                if (touchEnd - touchStart > 100) { // Si glissé suffisamment bas
+                    modal.classList.remove('show-modal');
+                    overlay.classList.remove('show-overlay');
+                }
+                modal.style.transform = '';
+                touchStart = 0;
+                touchEnd = 0;
+            });
+        });
+
+        function login() {
+            console.log("login function called");
+            if (window.ma && typeof window.ma.callNativeAPI === 'function') {
+                console.log("Native API available");
+                window.ma.callNativeAPI(
+                    "gethwssostring",
+                    { merchantAppId: "1322098216422402" },
+                    function(res) {
+                        console.log("superapptoken res:", res);
+                        window.superapptoken = res.xm_string_callback_key;
+                        getUserToken();
+                    }
+                );
+            } else {
+                console.log("Native API not available");
+            }
+        }
+
+        function getUserToken() {
+            $.ajax({
+                url: "https://pub-za.appcubecloud.com/service/Test_App__EZem/0.0.1/login",
+                method: "POST",
+                async: true,
+                headers: {
+                    "Content-Type": "application/json",
+                    "access-token": window.miniservertoken
+                },
+                data: JSON.stringify({
+                    superAppToken: window.superapptoken
+                }),
+                success: function (response) {
+                    console.log("miniusertoken:", response["result"]["access-token"]);
+                    window.accesstoken = response["result"]["accesstoken"];
+                },
+                error: function (xhr, status, error) {
+                    console.log("miniusertoken create fail", error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
