@@ -245,9 +245,9 @@
             const totalDistance = 2.4; // Distance totale en km
             const currentDistance = (totalDistance * progress / 100).toFixed(1);
 
-            document.getElementById('timeValue').textContent = ${elapsedTime} min;
-            document.getElementById('distanceValue').textContent = ${currentDistance} km;
-            document.getElementById('tripProgress').style.width = ${progress}%;
+            document.getElementById('timeValue').textContent = elapsedTime + ' min';
+            document.getElementById('distanceValue').textContent = currentDistance + ' km';
+            document.getElementById('tripProgress').style.width = progress + '%';
         }
 
         // Animation du déplacement
