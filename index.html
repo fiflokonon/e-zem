@@ -8,7 +8,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <script src="./js-sdk.min.js"></script>
     <script src="./vconsole.min.js"></script>
+    
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <!-- Inclure le lien Google Fonts pour Montserrat -->
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+        <!-- Inclure Bootstrap CSS -->
+
+    <link rel="stylesheet" href="micro.css">
     <style>
         :root {
             --primary-color: #E5A853;
@@ -17,7 +23,7 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Montserrat', sans-serif!important;
             color: var(--text-color);
             background-color: #fff;
         }
@@ -27,6 +33,7 @@
 
         .modal-container.active {
             display: block;
+            height: 80%;
         }
         .header {
             padding: 20px;
@@ -486,8 +493,11 @@
                         <i class="fas fa-circle" style="color: #E5A853;"></i>
                     </div>
                     <div class="location-info">
-                        <div class="location-label">Point de départ</div>
-                        <div class="location-value">Cotonou, Fidjrossé</div>
+                        <div class="location-label">Position actuelle</div>
+                        <!-- <div class="location-value" style="font-size: 14px;">Cotonou, Fidjrossé calvaire</div> -->
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Saint Michel Epitech" aria-label="First name">
+                          </div>
                     </div>
                 </div>
                 
@@ -497,22 +507,50 @@
                     </div>
                     <div class="location-info">
                         <div class="location-label">Point d'arriver</div>
-                        <div class="location-value">Cotonou, Fifadji</div>
+                        <!-- <div class="location-value" style="font-size: 14px;">Cotonou, Fifadji</div> -->
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Cotonou, Fifadji" aria-label="First name">
+                          </div>
                     </div>
                 </div>
                 
-                <div class="voice-command">
+                <!-- <div class="voice-command">
                     <i class="fas fa-microphone"></i>
                     <span>Commande vocale</span>
+                </div> -->
+
+                <div class="container mt-5">
+                    <!-- Commande vocale avec microphone -->
+                    <div class="voice-command" id="start-recording">
+                        <i class="fas fa-microphone"></i>
+                        <span>Commande vocale</span>
+                    </div>
+                
+                    <!-- Afficher le statut de l'enregistrement -->
+                    <div id="status" class="status"></div>
+                
+                    <!-- Audio enregistré -->
+                    <audio id="audio-playback" controls class="mt-3" style="display: none;">
+                        <source id="audio-source" type="audio/wav">
+                        Your browser does not support the audio element.
+                    </audio>
                 </div>
             </div>
 
             <div class="price-container">
                 <div class="price-label">Votre prix</div>
-                <div class="price-value">500F CFA - 700F CFA</div>
+                <!-- <div class="price-value">500F CFA - 700F CFA</div> -->
+                <div class="row">
+                    <div class="col">
+                      <input type="text" class="form-control" placeholder="500F CFA" aria-label="First name">
+                    </div>
+                    <div class="col">
+                      <input type="text" class="form-control" placeholder="700F CFA" aria-label="Last name">
+                    </div>
+                  </div>
             </div>
 
-            <button class="order-button">Lancer la commande</button>
+            <button class="order-button"> <a href="./zem_offer.html" class="text-light" style="text-decoration: none">Trouver mon zem</a></button>
         </div>
     </div>
 
@@ -539,41 +577,7 @@
         </a>
     </nav>
 
-    <div class="modal-container">
-        <div class="location-input">
-            <div class="location-point">
-                <div class="location-icon">
-                    <i class="fas fa-circle" style="font-size: 12px;"></i>
-                </div>
-                <div class="location-details">
-                    <div class="location-label">Point de départ</div>
-                    <div class="location-value">Cotonou, Fidjrossé</div>
-                </div>
-            </div>
-            
-            <div class="location-point">
-                <div class="location-icon">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div class="location-details">
-                    <div class="location-label">Point d'arriver</div>
-                    <div class="location-value">Cotonou, Fifadji</div>
-                </div>
-            </div>
 
-            <div class="voice-command">
-                <i class="fas fa-microphone"></i>
-                <span>Commande vocale</span>
-            </div>
-        </div>
-
-        <div class="price-section">
-            <div class="price-label">Votre prix</div>
-            <div class="price-value">500F CFA - 700F CFA</div>
-        </div>
-
-        <button class="action-button">Lancer la commande</button>
-    </div>
 
     <script>
         // Initialize VConsole
@@ -688,5 +692,10 @@
             });
         }
     </script>
+
+<script src="micro.js">
+</script>
+
+
 </body>
 </html>
